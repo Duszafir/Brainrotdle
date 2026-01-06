@@ -118,6 +118,9 @@ const words = [
     'Bruh',
     'bomboclatt',
     'Zestyvibes',
+    'charliekirk',
+    'totr',
+    'stillwater',
     'vexbolts'
 ];
 

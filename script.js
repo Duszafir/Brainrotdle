@@ -126,29 +126,68 @@ const words = [
 
 const filteredWords = isSmallScreen ? words.filter(word => word.length <= 7) : words;
 
-let correctWord = getNewWord();
-let wordLength = correctWord.length;
+const Secret = (() => {
+    let correctHash;
+    let wordLength;
 
-function getNewWord() {
-    return filteredWords[Math.floor(Math.random() * filteredWords.length)].toUpperCase();
+    function hashWord(word) {
+        let hash = 0;
+        for (let i = 0; i < word.length; i++) {
+            hash = ((hash << 5) - hash) + word.charCodeAt(i);
+            hash |= 0;
+        }
+        return hash;
+    }
+
+    function generate(words) {
+        const word = words[Math.floor(Math.random() * words.length)].toUpperCase();
+        correctHash = hashWord(word);
+        wordLength = word.length;
+    }
+
+    function matches(guess) {
+        return hashWord(guess) === correctHash;
+    }
+
+    function withSecret(callback) {
+        const word = filteredWords
+            .map(w => w.toUpperCase())
+            .find(w => hashWord(w) === correctHash);
+
+        if (word) callback(word);
+    }
+
+    return {
+        generate,
+        matches,
+        withSecret,
+        get length() {
+            return wordLength;
+        }
+    };
+})();
+
+function initGame() {
+    Secret.generate(filteredWords);
+    createCells();
+    updateStats();
 }
 
-function createCells() {
-    // Asegurarse de que las filas existentes se eliminen si es necesario
-    rows.forEach(row => row.innerHTML = ''); // Limpiar filas anteriores
+initGame();
 
-    // Crear las celdas dependiendo de la longitud de la palabra
+
+function createCells() {
+    rows.forEach(row => row.innerHTML = '');
+
     for (let i = 0; i < rows.length; i++) {
         const row = rows[i];
-        for (let j = 0; j < wordLength; j++) {
+        for (let j = 0; j < Secret.length; j++) {
             const cell = document.createElement('div');
             cell.classList.add('cell');
             row.appendChild(cell);
         }
     }
 }
-
-createCells();
 
 function updateStats() {
     streakDiv.textContent = `Racha: ${streak}🔥`;
@@ -158,13 +197,12 @@ function updateStats() {
     document.querySelector(".mjracha").innerText = "Mejor racha: " + bestStreak;
 }
 
-updateStats();
 
 function handleEnter(cells) {
     const isSmallScreen = window.innerWidth < 768;
     const cell = cells[currentCell];
     
-    if (currentCell < wordLength) {
+    if (currentCell < Secret.length) {
         showErrorMessage();
         return;
     }
@@ -177,7 +215,7 @@ function handleEnter(cells) {
     colorCells(cells);
 
     const guessedWord = Array.from(cells).map(cell => cell.textContent).join('');
-    if (guessedWord === correctWord) {
+    if (Secret.matches(guessedWord)) {
         gameWon = true;
         gameLosed = false;
         streak++;
@@ -242,14 +280,14 @@ function handleLetter(letter) {
     const cells = row.querySelectorAll('.cell');
     const cell = cells[currentCell];
 
-    if (currentCell === wordLength) return; 
+    if (currentCell === Secret.length) return; 
 
     cell.textContent = letter;
     cell.style.color = 'var(--keycolor)';
     cell.style.borderColor = 'var(--key-bg)';
     currentCell++;
 
-    if (currentCell < wordLength) {
+    if (currentCell < Secret.length) {
         cells[currentCell].style.borderColor = 'var(--blue)';
     }
 }
@@ -262,11 +300,11 @@ function handleKeyPress(e) {
     const cells = row.querySelectorAll('.cell');
 
     if (e.key.match(/[a-zA-Z]/g) && e.key.length === 1) {
-        if (currentCell === wordLength) return;  // No permite escribir más caracteres que la longitud de la palabra
+        if (currentCell === Secret.length) return;
         cells[currentCell].textContent = key;
         cells[currentCell].style.borderColor = 'var(--key-bg)';
         currentCell++;
-        if (currentCell < wordLength) {
+        if (currentCell < Secret.length) {
             cells[currentCell].style.borderColor = 'var(--blue)';
         }
     } else if (key === 'BACKSPACE') {
@@ -338,57 +376,58 @@ function resetKeyboardColors() {
 }
 
 function colorCells(cells) {
-    const wordArray = correctWord.split('');
-    const guessedArray = Array.from(cells).map(cell => cell.textContent);
+    const guessed = Array.from(cells).map(c => c.textContent).join('');
 
-    guessedArray.forEach((letter, index) => {
-        if (wordArray[index] === letter) {
-            cells[index].style.backgroundColor = 'var(--green)';
-            colorKeyboard(letter, 'var(--green)');
-            wordArray[index] = null;
-            guessedArray[index] = null;
-        }
+    Secret.withSecret(secret => {
+        const wordArray = secret.split('');
+        const guessArray = guessed.split('');
+
+        guessArray.forEach((l, i) => {
+            if (wordArray[i] === l) {
+                cells[i].style.backgroundColor = 'var(--green)';
+                colorKeyboard(l, 'var(--green)');
+                wordArray[i] = null;
+                guessArray[i] = null;
+            }
+        });
+
+        guessArray.forEach((l, i) => {
+            if (!l) return;
+            const idx = wordArray.indexOf(l);
+            if (idx !== -1) {
+                cells[i].style.backgroundColor = 'var(--yellow)';
+                colorKeyboard(l, 'var(--yellow)');
+                wordArray[idx] = null;
+            } else {
+                cells[i].style.backgroundColor = 'var(--background-cell-key)';
+                colorKeyboard(l, 'var(--background-cell-key)');
+            }
+        });
     });
-
-    guessedArray.forEach((letter, index) => {
-        if (letter === null) return;
-        const foundIndex = wordArray.indexOf(letter);
-        if (foundIndex !== -1) {
-            cells[index].style.backgroundColor = 'var(--yellow)';
-            colorKeyboard(letter, 'var(--yellow)');
-            wordArray[foundIndex] = null;
-        } else {
-            cells[index].style.backgroundColor = 'var(--background-cell-key)';
-            colorKeyboard(letter, 'var(--background-cell-key)');
-        }
-    });
-
 }
+
 
 
 function showVictoryMenu() {
     const victoryMenu = document.querySelector('.victory-menu');
     victoryMenu.classList.remove('hidden');
-    const correctWordElement = document.querySelector('.correct_word');
-    correctWordElement.textContent = `La palabra correcta es: ${correctWord}`;
 
-    const aquiContainer = document.querySelector('.aqui_container');
-    if (aquiContainer) {
-        aquiContainer.classList.remove('hidden');
-    }
+    const correctWordElement = document.querySelector('.correct_word');
+    Secret.withSecret(word => {
+        correctWordElement.textContent = `La palabra correcta es: ${word}`;
+    });
 }
 
 function showLoseMenu() {
     const loseMenu = document.querySelector('.lose-menu');
     loseMenu.classList.remove('hidden');
-    const correctWordElement = document.querySelector('.correct_wordd');
-    correctWordElement.textContent = `La palabra correcta era: ${correctWord}`;
 
-    const aquiContainer = document.querySelector('.aqui_container');
-    if (aquiContainer) {
-        aquiContainer.classList.remove('hidden');
-    }
+    const correctWordElement = document.querySelector('.correct_wordd');
+    Secret.withSecret(word => {
+        correctWordElement.textContent = `La palabra correcta era: ${word}`;
+    });
 }
+
 
 function showConfigMenu() {
     updateStats()
@@ -419,8 +458,7 @@ function restartGame() {
     currentRow = 0;
     currentCell = 0;
 
-    correctWord = getNewWord();
-    wordLength = correctWord.length; 
+    initGame();
 
     rows.forEach(row => {
         row.innerHTML = '';
@@ -437,13 +475,12 @@ function restartGame() {
     hideVictoryMenu();
     hideLoseMenu();
 
-    // Detener la animación si está activa
     if (trophyInterval) {
         clearInterval(trophyInterval);
-        trophyInterval = null;  // Resetear la variable
+        trophyInterval = null;
         const trophy = document.querySelector('.config');
         if (trophy) {
-            trophy.style.fontSize = '25px';  // Restaurar tamaño original
+            trophy.style.fontSize = '25px';
         }
     }
 }
@@ -481,10 +518,6 @@ function handleTrophyClick() {
 
 function handleConfigClick() {
     showConfigMenu()
-}
-
-function easterEggskibidi() {
-    console.log(`Shhh dont say ${correctWord}`)
 }
 
 function showFooter() {
@@ -562,5 +595,6 @@ document.addEventListener('DOMContentLoaded', () => {
         streakDiv.classList.remove('hidden');
     }
 });
+
 
 document.addEventListener('keydown', handleKeyPress);

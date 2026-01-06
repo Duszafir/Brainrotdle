@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brainrotle</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/a715c638e7.js" crossorigin="anonymous"></script>
+    <meta name="description" content="Brainrotle - Un divertido juego de adivinanzas con palabras. Desafía tu mente, gana puntos y aprende del Brainrot ¡Prueba ahora!">
+    <meta name="keywords" content="Brainrotle, juego de palabras, juego divertido, adivinanza, reto mental, juegos online, desafía tu mente, skibidi toilet, Brainrot">
+    <meta name="author" content="Duszafir">
+    <meta name="robots" content="index, follow">
+</head>
+<body>
+    <header>
+        <i class="fa-regular fa-sun color" id="toggle-theme"></i>
+        <div class="header_nav">
+            <div class="title">
+                <i class="fa-solid fa-user user"></i><h1>Brain<span class="rot">Rot</span></h1>
+            </div>
+            <i class="fa-solid fa-trophy config"></i>
+            <div class="aqui_container hidden">
+                <i class="fa-solid fa-arrow-left flecha"></i>
+                <span class="aqui">Haz click para continuar el juego!</span>
+            </div>
+        </div>
+        <div class="error-message"><i class="fa-solid fa-triangle-exclamation"></i> Debes completar todos los caracteres</div>
+    </header>
+    <div class="racha hidden">🔥</div>
+    <div class="container">
+        <div class="grid">
+            <div class="row">
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+            </div>
+            <div class="row">
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+            </div>
+            <div class="row">
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+            </div>
+            <div class="row">
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+            </div>
+            <div class="row">
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+            </div>
+            <div class="row">
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+                <div class="cell" tabindex="0"></div>
+            </div>
+        </div>
+
+        <div class="keyboard">
+            <div class="row_keyboard">
+                <span class="key">A</span>
+                <span class="key">B</span>
+                <span class="key">C</span>
+                <span class="key">D</span>
+                <span class="key">E</span>
+                <span class="key">F</span>
+                <span class="key">G</span>
+                <span class="key">H</span>
+                <span class="key">I</span>
+                <span class="key">J</span>
+            </div>
+            <div class="row_keyboard midkeyboard">
+                <span class="key">K</span>
+                <span class="key">L</span>
+                <span class="key">M</span>
+                <span class="key">N</span>
+                <span class="key">O</span>
+                <span class="key">P</span>
+                <span class="key">Q</span>
+                <span class="key">R</span>
+                <span class="key">S</span>
+                <span class="key">T</span>
+            </div>
+            <div class="row_keyboard last_row">
+                <i class="fa-solid fa-check key lastkey check"></i>
+                <span class="key lastkey">U</span>
+                <span class="key lastkey">V</span>
+                <span class="key lastkey">W</span>
+                <span class="key lastkey">X</span>
+                <span class="key lastkey">Y</span>
+                <span class="key lastkey">Z</span>
+                <i class="fa-solid fa-delete-left key lastkey borr"></i>
+            </div>
+        </div>
+        <div class="victory-menu hidden">
+            <div class="victory-content">
+                <h2 class="fle">¡Felicidades!</h2>
+                <p class="correct_word"></p>
+                <p class="correct_desc"></p>
+                <button id="restartBtn">Jugar de nuevo</button>
+                <button id="exitBtn">Salir</button>
+            </div>
+        </div>
+    </div>
+    <div class="lose-menu hidden">
+        <div class="lose-content">
+            <h2 class="game_over" style="color: red;">Game over</h2>
+            <p class="correct_wordd"></p>
+            <p class="correct_desc"></p>
+            <button id="restartBtn2">Jugar de nuevo</button>
+            <button id="exitBtn2">Salir</button>
+        </div>
+    </div>
+    <div class="config-menu hidden">
+        <div class="config-content">
+            <h2 class="pf"><i class="fa-regular fa-user"></i> Mi perfil</h2>
+            
+            <div class="item">
+                <i class="fa-solid fa-trophy trophyy"></i>
+                <p class="victorias">Victorias</p>
+            </div>
+    
+            <div class="item">
+                <i class="fa-regular fa-circle-xmark derrota"></i>
+                <p class="derrotas">Derrotas</p>
+            </div>
+    
+            <div class="item">
+                <i class="fa-regular fa-clipboard rachaj"></i>
+                <p class="rachap">Racha Personal</p>
+            </div>
+    
+            <div class="item">
+                <i class="fa-solid fa-champagne-glasses rachab"></i>
+                <p class="mjracha">Mejor Racha</p>
+            </div>
+    
+            <button id="exitBtn3">Salir</button>    
+        </div>
+    </div>
+    <footer id>
+        <div class="footer-container">
+            <a href="https://github.com/Duszafir" target="_blank">
+                <i class="fa-brands fa-square-github github"></i>
+            </a>
+            <a href="https://duszafir.netlify.app/" target="_blank"><div class="dusza"></div></a>
+            <p class="hidden footer_text">Si abres esta página desde tu computadora, verás oraciones más largas y contenido adicional. ¡Disfruta de la experiencia completa!</p>
+        </div>  
+    </footer>
+</body>
+</html>

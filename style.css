@@ -76,7 +76,7 @@ header {
 .header_nav {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Esto asegura que tanto el texto como el icono estén alineados verticalmente */
+    align-items: center;
     padding: 0 20px;
     position: relative;
     margin-left: -3px;
@@ -315,7 +315,6 @@ header {
     transition: background-color 0.3s ease;
 }
 
-/* Cambio de color al pasar el cursor por encima */
 .key.borr:hover {
     background-color: rgb(224, 97, 97);
 }
@@ -383,9 +382,9 @@ footer {
     margin: 0 auto;
     font-size: 14px;
     display: flex;
-    justify-content: center; /* Centra los elementos en el contenedor */
-    align-items: center; /* Alinea verticalmente los elementos */
-    gap: 10px; /* Espacio entre los elementos */
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
 }
 
 footer p {
@@ -434,9 +433,9 @@ footer p {
     transition: color 0.3s ease;
     color: var(--colorc);
     position: fixed;
-    top: 20px;  /* Ajusta la distancia desde la parte superior */
-    left: 20px; /* Ajusta la distancia desde la parte izquierda */
-    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
 }
 
 #toggle-theme:hover {
@@ -563,7 +562,6 @@ footer p {
     }
 
     .footer-container {
-        flex-direction: column;
         gap: 5px; 
         text-align: center;
     }
@@ -635,12 +633,12 @@ footer p {
     }
 
     .keyboard {
-        width: 100%; /* Ocupa todo el ancho */
-        padding: 10px 0; /* Más espacio vertical */
+        width: 100%;
+        padding: 10px 0;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
-        overflow-x: hidden; /* Evita desplazamiento horizontal */
+        overflow-x: hidden;
     }
 
     .row_keyboard {
@@ -670,7 +668,6 @@ footer p {
     }
     
     .footer-container {
-        flex-direction: column;
         gap: 3px;               
         text-align: center;
     }
